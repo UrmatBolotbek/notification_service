@@ -44,6 +44,11 @@ dependencies {
     implementation("com.vonage:client:7.3.0")
 
     /**
+     * Vonage
+     */
+    implementation ("com.vonage:client:[6.1.0,7.0.0)")
+
+    /**
      * Test containers
      */
     implementation(platform("org.testcontainers:testcontainers-bom:1.17.6"))
