@@ -46,7 +46,7 @@ dependencies {
     /**
      * Vonage
      */
-    implementation ("com.vonage:client:[6.1.0,7.0.0)")
+    implementation("com.vonage:server-sdk:8.14.0")
 
     /**
      * Test containers
