@@ -19,12 +19,12 @@ public class SmsService implements NotificationService {
 
     private final VonageClient vonageClient;
     @Value("${vonage.from}")
-    private String from;
+    private String sendingPhoneNumber;
 
     @Override
     public void send(UserDto user, String text) {
         TextMessage message = new TextMessage(
-                from,
+                sendingPhoneNumber,
                 user.getPhone(),
                 text
         );
@@ -32,10 +32,10 @@ public class SmsService implements NotificationService {
         SmsSubmissionResponseMessage responseMessage = response.getMessages().get(0);
 
         if (responseMessage.getStatus() == MessageStatus.OK) {
-            log.info("Phone submitted successfully");
+            log.info("Sms for user {} sent successfully", user.getId());
         } else {
             log.error("Message failed with error: {}", responseMessage.getErrorText());
-            throw new SmsSendingException("PHONE for user %s failed. Error: %s"
+            throw new SmsSendingException("Sms for user %s failed. Error: %s"
                     .formatted(user.getId(), responseMessage.getErrorText()));
         }
     }
