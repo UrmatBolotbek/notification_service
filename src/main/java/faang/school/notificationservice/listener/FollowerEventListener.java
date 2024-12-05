@@ -1,28 +1,38 @@
 package faang.school.notificationservice.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.notificationservice.client.UserServiceClient;
 import faang.school.notificationservice.dto.FollowerEvent;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import faang.school.notificationservice.dto.UserDto;
+import faang.school.notificationservice.messaging.MessageBuilder;
+import faang.school.notificationservice.service.NotificationService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
-@Slf4j
 @Component
-@RequiredArgsConstructor
-public class FollowerEventListener implements MessageListener {
-    private final ObjectMapper objectMapper;
+public class FollowerEventListener extends AbstractEventListener<FollowerEvent> implements MessageListener {
+
+    public FollowerEventListener(ObjectMapper objectMapper,
+                                 UserServiceClient userServiceClient,
+                                 List<MessageBuilder<FollowerEvent>> messageBuilders,
+                                 List<NotificationService> notificationServices) {
+        super(objectMapper, userServiceClient, messageBuilders, notificationServices);
+    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            objectMapper.readValue(message.getBody(), FollowerEvent.class);
+            FollowerEvent event = objectMapper.readValue(message.getBody(), FollowerEvent.class);
+            UserDto user = userServiceClient.getUser(event.getFolloweeId());
+            String messageText = getMessage(event, Locale.forLanguageTag(user.getLocale()));
+            sendNotification(event.getFolloweeId(),messageText);
         } catch (IOException e) {
-            log.error("Failed to deserialize json in object");
-            throw new IllegalStateException("Failed to deserialize json in object", e);
+            throw new RuntimeException("Failed to deserialize json in object", e);
         }
     }
 }
