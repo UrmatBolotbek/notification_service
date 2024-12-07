@@ -10,6 +10,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+
 }
 
 dependencies {
@@ -47,6 +48,17 @@ dependencies {
      * Vonage
      */
     implementation("com.vonage:server-sdk:8.14.0")
+
+
+    /**
+     * Telegram
+     */
+
+    implementation ("org.telegram:telegrambots:6.9.7.1")
+    implementation ("org.telegram:telegrambots-spring-boot-starter:6.0.1")
+    implementation ("org.telegram:telegrambots-client:7.4.2")
+
+    implementation ("org.telegram:telegrambots-longpolling:7.0.0-rc0")
 
     /**
      * Test containers

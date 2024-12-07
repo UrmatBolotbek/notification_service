@@ -38,6 +38,10 @@ vonage: #https://dashboard.nexmo.com/getting-started/sms
   api:
     key: 3189fb57
     secret: m5hqJaJ6jVdIfB3t
+telegram:
+  bot:
+    username: NotificationBootCamp_Bot
+    token: 7612440919:AAGYLWMB2HKPV2rl3z8W6ggGRiXyJqQ7wng
 
 project-service:
     host: localhost
