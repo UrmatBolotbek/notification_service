@@ -6,6 +6,8 @@ spring:
       channels:
         event-start-event-channel:
           name: event-start-channel
+        event-start-reminder-event-channel:
+          name: event-start-reminder-event-channel
 
   mail:
     host: smtp.gmail.com

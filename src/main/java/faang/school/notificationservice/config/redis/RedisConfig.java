@@ -1,5 +1,6 @@
 package faang.school.notificationservice.config.redis;
 
+import faang.school.notificationservice.dto.event.EventStartReminderEvent;
 import faang.school.notificationservice.listener.event.EventStartEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.event-start-event-channel.name}")
     private String eventStartEventTopic;
 
+    @Value("${spring.data.redis.channels.event-start-reminder-event-channel.name}")
+    private String eventStartReminderEventTopic;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
@@ -42,10 +46,12 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter eventStartListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter eventStartListener,
+                                                 MessageListenerAdapter eventStartReminderEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(eventStartListener, eventStartEventTopic());
+        container.addMessageListener(eventStartReminderEvent, eventStartReminderEventTopic());
         return container;
     }
 
@@ -55,7 +61,17 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter eventStartReminderListener(EventStartReminderEvent eventStartReminderEvent) {
+        return new MessageListenerAdapter(eventStartReminderEvent);
+    }
+
+    @Bean
     ChannelTopic eventStartEventTopic() {
         return new ChannelTopic(eventStartEventTopic);
+    }
+
+    @Bean
+    ChannelTopic eventStartReminderEventTopic() {
+        return new ChannelTopic(eventStartReminderEventTopic);
     }
 }
