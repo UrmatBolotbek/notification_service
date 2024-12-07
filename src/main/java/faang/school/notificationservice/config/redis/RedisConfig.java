@@ -42,10 +42,10 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter fundRaisedListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter eventStartListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(fundRaisedListener, eventStartEventTopic());
+        container.addMessageListener(eventStartListener, eventStartEventTopic());
         return container;
     }
 
