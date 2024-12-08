@@ -4,7 +4,9 @@ spring:
       port: 6379
       host: localhost
       channels:
-       comment-channel: comment-topic
+        event-start-event-channel: event-start-channel
+        event-start-reminder-event-channel: event-start-reminder-event-channel
+        comment-channel: comment-topic
 
   mail:
     host: smtp.gmail.com
