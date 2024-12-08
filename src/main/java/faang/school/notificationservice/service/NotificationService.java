@@ -6,9 +6,6 @@ public interface NotificationService {
 
     void send(UserDto user, String message);
 
-    PreferredContact getPreferredContact();
+    UserDto.PreferredContact getPreferredContact();
 
-    public enum PreferredContact {
-        EMAIL, SMS, TELEGRAM
-    }
 }
