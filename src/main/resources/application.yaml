@@ -4,10 +4,8 @@ spring:
       port: 6379
       host: localhost
       channels:
-        event-start-event-channel:
-          name: event-start-channel
-        event-start-reminder-event-channel:
-          name: event-start-reminder-event-channel
+        event-start-event-channel: event-start-channel
+        event-start-reminder-event-channel: event-start-reminder-event-channel
 
   mail:
     host: smtp.gmail.com
