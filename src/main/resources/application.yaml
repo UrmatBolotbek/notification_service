@@ -4,7 +4,7 @@ spring:
       port: 6379
       host: localhost
       channels:
-       comment_channel: comment_topic
+       comment-channel: comment-topic
 
   mail:
     host: smtp.gmail.com

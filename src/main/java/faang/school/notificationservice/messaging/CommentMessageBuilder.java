@@ -22,7 +22,7 @@ public class CommentMessageBuilder implements MessageBuilder<CommentEvent> {
     }
 
     @Override
-    public Class<?> supportsEventType() {
+    public Class<?> getInstance() {
         return CommentEvent.class;
     }
 }

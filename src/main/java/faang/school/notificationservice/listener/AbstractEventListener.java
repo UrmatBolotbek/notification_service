@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @Slf4j
 public abstract class AbstractEventListener<T> {
-    protected final ObjectMapper objectMapper;
-    protected final UserServiceClient userServiceClient;
-    protected final List<MessageBuilder<T>> messageBuilders;
+    private final ObjectMapper objectMapper;
+    private final UserServiceClient userServiceClient;
+    private final List<MessageBuilder<T>> messageBuilders;
     private final List<NotificationService> notificationServices;
 
     protected void handleEvent(Message message, Class<T> type, Consumer<T> consumer) {
@@ -36,7 +36,7 @@ public abstract class AbstractEventListener<T> {
 
     protected String getMessage(T event, Locale userLocale) {
         return messageBuilders.stream()
-                .filter(messageBuilder -> messageBuilder.supportsEventType() == event.getClass())
+                .filter(messageBuilder -> messageBuilder.getInstance() == event.getClass())
                 .findFirst()
                 .map(messageBuilder -> messageBuilder.buildMessage(event, userLocale))
                 .orElseThrow(() -> new IllegalArgumentException
@@ -45,6 +45,7 @@ public abstract class AbstractEventListener<T> {
 
     protected void sendNotification(Long id, String message) {
         UserDto user = userServiceClient.getUser(id);
+        log.info("Sending notification to user: {}", user);
         notificationServices.stream()
                 .filter(notificationService -> notificationService.getPreferredContact().equals(user.getPreference()))
                 .findFirst()
