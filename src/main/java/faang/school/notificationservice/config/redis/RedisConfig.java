@@ -48,8 +48,8 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
-        MessageListenerAdapter projectViewListener = getListenerAdapter(recommendationReceivedEventListener);
-        container.addMessageListener(projectViewListener, new ChannelTopic(topicRecommendationReceived));
+        container.addMessageListener(getListenerAdapter(recommendationReceivedEventListener),
+                new ChannelTopic(topicRecommendationReceived));
         return container;
     }
 
