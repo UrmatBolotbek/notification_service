@@ -55,6 +55,9 @@ dependencies {
      */
 
     implementation("org.telegram:telegrambots:6.5.0")
+    implementation ("org.telegram:telegrambots-spring-boot-starter:6.5.0")
+//    implementation ("org.telegram:telegrambots-client:7.4.2")
+//    implementation ("org.telegram:telegrambots-longpolling:7.4.2")
 
     /**
      * Test containers

@@ -17,7 +17,10 @@ public class StartCommand extends Command {
 
     @Override
     public SendMessage execute(CommandDto commandDto) {
-        String greetings = environment.getProperty("telegram.greetings", commandDto.getFirstName());
+        String greetings = String.format(
+                environment.getProperty("telegram.greetings", "Hello, %s!"),
+                commandDto.getFirstName()
+        );
         return createMessage(greetings, commandDto.getChatId(), commandDto.getFirstName());
     }
 
