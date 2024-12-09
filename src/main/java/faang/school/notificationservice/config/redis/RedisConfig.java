@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,7 +28,7 @@ public class RedisConfig {
     private String redisHost;
     @Value("${spring.data.redis.port}")
     private int redisPort;
-    @Value("${spring.data.redis.channel.recommendation-received}")
+    @Value("${spring.data.redis.channels.event-start-recommendation-received-channel}")
     private String topicRecommendationReceived;
 
     @Value("${spring.data.redis.channels.event-start-event-channel}")
