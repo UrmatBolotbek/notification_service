@@ -53,7 +53,7 @@ public class RecommendationReceivedEventListenerTest {
 
         messageBuilders = mock(List.class);
         notificationServices = mock(List.class);
-        listener = new RecommendationReceivedEventListener(mapper, messageBuilders, userServiceClient, notificationServices);
+        listener = new RecommendationReceivedEventListener(messageBuilders, mapper, userServiceClient, notificationServices);
 
         message = new Message() {
             @Override

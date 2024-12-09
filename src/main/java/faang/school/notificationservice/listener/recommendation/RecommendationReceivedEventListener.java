@@ -17,11 +17,12 @@ import java.util.Locale;
 @Component
 public class RecommendationReceivedEventListener extends AbstractEventListener<RecommendationReceivedEvent> implements MessageListener {
 
-    public RecommendationReceivedEventListener(ObjectMapper objectMapper,
-                                               List<MessageBuilder<RecommendationReceivedEvent>> messageBuilders,
+
+    public RecommendationReceivedEventListener(List<MessageBuilder<RecommendationReceivedEvent>> messageBuilders,
+                                               ObjectMapper objectMapper,
                                                UserServiceClient userServiceClient,
                                                List<NotificationService> notificationServices) {
-        super(objectMapper, messageBuilders, userServiceClient, notificationServices);
+        super(messageBuilders, objectMapper, userServiceClient, notificationServices);
     }
 
     @Override

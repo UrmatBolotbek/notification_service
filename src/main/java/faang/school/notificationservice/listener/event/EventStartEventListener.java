@@ -16,11 +16,12 @@ import java.util.Locale;
 @Component
 public class EventStartEventListener extends AbstractEventListener<EventStartEvent> implements MessageListener {
 
-    public EventStartEventListener(ObjectMapper objectMapper,
+
+    public EventStartEventListener(List<MessageBuilder<EventStartEvent>> messageBuilders,
+                                   ObjectMapper objectMapper,
                                    UserServiceClient userServiceClient,
-                                   List<MessageBuilder<EventStartEvent>> messageBuilders,
                                    List<NotificationService> notificationServices) {
-        super(objectMapper, userServiceClient, messageBuilders, notificationServices);
+        super(messageBuilders, objectMapper, userServiceClient, notificationServices);
     }
 
     @Override

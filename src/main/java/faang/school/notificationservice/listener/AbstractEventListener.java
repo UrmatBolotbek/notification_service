@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class AbstractEventListener<T> {
 
-    protected final List<MessageBuilder<T>> messageBuilders;
+    private final List<MessageBuilder<T>> messageBuilders;
     private final ObjectMapper objectMapper;
     private final UserServiceClient userServiceClient;
     private final List<NotificationService> notificationServices;
