@@ -1,5 +1,7 @@
 package faang.school.notificationservice.config.redis;
 
+import faang.school.notificationservice.listener.event.EventStartEventListener;
+import faang.school.notificationservice.listener.event.EventStartReminderEventListener;
 import faang.school.notificationservice.listener.recommendation.RecommendationReceivedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
+    private final EventStartEventListener eventStartEventListener;
+    private final EventStartReminderEventListener eventStartReminderEventListener;
     private final RecommendationReceivedEventListener recommendationReceivedEventListener;
 
     @Value("${spring.data.redis.host}")
@@ -28,8 +32,14 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.recommendation-received}")
     private String topicRecommendationReceived;
 
+    @Value("${spring.data.redis.channels.event-start-event-channel}")
+    private String eventStartEventTopic;
+
+    @Value("${spring.data.redis.channels.event-start-reminder-event-channel}")
+    private String eventStartReminderEventTopic;
+
     @Bean
-    public JedisConnectionFactory redisConnectionFactory() {
+    public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(redisConfig);
     }
@@ -37,17 +47,20 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
+        template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
+    RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(jedisConnectionFactory());
 
+        addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
+        addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
+        addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
         addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
 
         return container;
@@ -56,5 +69,4 @@ public class RedisConfig {
     private void addMessageListenerInContainer(MessageListener listener, String topic, RedisMessageListenerContainer container) {
         container.addMessageListener(new MessageListenerAdapter(listener), new ChannelTopic(topic));
     }
-
 }

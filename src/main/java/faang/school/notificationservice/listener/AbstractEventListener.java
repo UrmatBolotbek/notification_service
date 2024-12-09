@@ -18,23 +18,14 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class AbstractEventListener<T> {
 
-    protected final ObjectMapper objectMapper;
     protected final List<MessageBuilder<T>> messageBuilders;
+    private final ObjectMapper objectMapper;
     private final UserServiceClient userServiceClient;
     private final List<NotificationService> notificationServices;
 
-
-    protected String getMessage(T event, Locale locale) {
-        return messageBuilders.stream()
-                .filter(messageBuilder -> messageBuilder.getInstance() == event.getClass())
-                .findFirst()
-                .map(messageBuilder -> messageBuilder.buildMessage(event, locale))
-                .orElseThrow(() -> new IllegalArgumentException("No message builder" +
-                        " found for the given event type " + event.getClass().getName()));
-    }
-
     protected void handleEvent(Message message, Class<T> clazz, Consumer<T> consumer) {
         try {
+            log.info("Received message: {}", new String(message.getBody()));
             T event = objectMapper.readValue(message.getBody(), clazz);
             consumer.accept(event);
         } catch (IOException e) {
@@ -43,13 +34,34 @@ public abstract class AbstractEventListener<T> {
         }
     }
 
-    protected void sendNotification(Long id, String message) {
-        UserDto user = userServiceClient.getUser(id);
-        notificationServices.stream()
-                .filter(notification -> notification.getPreferredContact() == user.getPreference())
+    protected String getMessage(T event, Locale userLocale) {
+        log.info("Building message for event of type: {} with locale: {}", event.getClass().getName(), userLocale);
+        return messageBuilders.stream()
+                .filter(messageBuilder -> messageBuilder.getInstance() == event.getClass())
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No notification service found for the user's preferred communication method."))
-                .send(user, message);
+                .map(messageBuilder -> messageBuilder.buildMessage(event, userLocale))
+                .orElseThrow(() -> {
+                    log.error("No message builder found for the given event type: {}", event.getClass().getName());
+                    return new IllegalArgumentException("No message builder found for the given event type: "
+                            + event.getClass().getName());
+                });
     }
 
+    protected void sendNotification(Long id, String message) {
+        log.info("Fetching user details for user ID: {}", id);
+
+        UserDto user = userServiceClient.getUser(id);
+        log.info("User details retrieved: {}", user);
+
+        notificationServices.stream()
+                .filter(notificationService -> notificationService.getPreferredContact().equals(user.getPreference()))
+                .findFirst()
+                .orElseThrow(() -> {
+                    log.error("No notification service found for the user's preferred communication method: {}", user.getPreference());
+                    return new IllegalArgumentException("No notification service found for the user's preferred communication method: "
+                            + user.getPreference());
+                })
+                .send(user, message);
+        log.info("Notification successfully sent to user ID: {}", id);
+    }
 }
