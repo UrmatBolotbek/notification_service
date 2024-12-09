@@ -19,7 +19,7 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> im
                                 UserServiceClient userServiceClient,
                                 List<MessageBuilder<CommentEvent>> messageBuilders,
                                 List<NotificationService> notificationServices) {
-        super(objectMapper, userServiceClient, messageBuilders, notificationServices);
+        super(messageBuilders, objectMapper, userServiceClient, notificationServices);
     }
 
     @Override

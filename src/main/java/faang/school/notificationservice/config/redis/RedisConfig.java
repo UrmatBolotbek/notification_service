@@ -37,7 +37,6 @@ public class RedisConfig {
     private String topicComment;
     @Value("${spring.data.redis.channels.event-start-event-channel}")
     private String eventStartEventTopic;
-
     @Value("${spring.data.redis.channels.event-start-reminder-event-channel}")
     private String eventStartReminderEventTopic;
 
@@ -61,7 +60,6 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
 
-        addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
         addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
         addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
         addMessageListenerInContainer(commentEventListener, topicComment, container);
