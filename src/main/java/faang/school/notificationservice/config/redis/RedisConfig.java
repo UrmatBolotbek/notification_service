@@ -2,6 +2,7 @@ package faang.school.notificationservice.config.redis;
 
 import faang.school.notificationservice.listener.event.EventStartEventListener;
 import faang.school.notificationservice.listener.event.EventStartReminderEventListener;
+import faang.school.notificationservice.listener.recommendation.RecommendationReceivedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,14 +19,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
+
     private final EventStartEventListener eventStartEventListener;
     private final EventStartReminderEventListener eventStartReminderEventListener;
+    private final RecommendationReceivedEventListener recommendationReceivedEventListener;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
+    @Value("${spring.data.redis.channels.event-start-recommendation-received-channel}")
+    private String topicRecommendationReceived;
 
     @Value("${spring.data.redis.channels.event-start-event-channel}")
     private String eventStartEventTopic;
@@ -56,11 +60,12 @@ public class RedisConfig {
         addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
         addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
         addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
+        addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
 
         return container;
     }
 
-    private void addMessageListenerInContainer(MessageListener listenerAdapter, String topic, RedisMessageListenerContainer container) {
-        container.addMessageListener(new MessageListenerAdapter(listenerAdapter), new ChannelTopic(topic));
+    private void addMessageListenerInContainer(MessageListener listener, String topic, RedisMessageListenerContainer container) {
+        container.addMessageListener(new MessageListenerAdapter(listener), new ChannelTopic(topic));
     }
 }

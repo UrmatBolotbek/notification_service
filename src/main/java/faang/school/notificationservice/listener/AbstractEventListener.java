@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public abstract class AbstractEventListener<T> {
+
+    private final List<MessageBuilder<T>> messageBuilders;
     private final ObjectMapper objectMapper;
     private final UserServiceClient userServiceClient;
-    private final List<MessageBuilder<T>> messageBuilders;
     private final List<NotificationService> notificationServices;
 
     protected void handleEvent(Message message, Class<T> clazz, Consumer<T> consumer) {
