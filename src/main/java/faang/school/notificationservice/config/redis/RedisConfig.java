@@ -56,15 +56,13 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
 
-        addMessageListenerInContainer(eventStartEventListener, new ChannelTopic(eventStartEventTopic), container);
-        addMessageListenerInContainer(eventStartEventListener, new ChannelTopic(eventStartEventTopic), container);
-        addMessageListenerInContainer(eventStartReminderEventListener, new ChannelTopic(eventStartReminderEventTopic), container);
-        addMessageListenerInContainer(commentEventListener, new ChannelTopic(topicComment), container);
+        addMessageListenerInContainer(eventStartEventListener, eventStartEventTopic, container);
+        addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
+        addMessageListenerInContainer(commentEventListener, topicComment, container);
         return container;
     }
 
-    private void addMessageListenerInContainer(MessageListener listenerAdapter, ChannelTopic topic, RedisMessageListenerContainer container) {
-        listenerAdapter = new MessageListenerAdapter(listenerAdapter);
-        container.addMessageListener(listenerAdapter, topic);
+    private void addMessageListenerInContainer(MessageListener listenerAdapter, String topic, RedisMessageListenerContainer container) {
+        container.addMessageListener(new MessageListenerAdapter(listenerAdapter), new ChannelTopic(topic));
     }
 }
