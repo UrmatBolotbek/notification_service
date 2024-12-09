@@ -13,10 +13,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramBotInitializer {
-
     private final TelegramBot telegramBot;
     private final TelegramConfig config;
-
 
     @PostConstruct
     public void init() {

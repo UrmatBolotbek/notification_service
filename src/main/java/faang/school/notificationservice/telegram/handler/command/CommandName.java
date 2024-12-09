@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 public enum CommandName {
     START("/start"),
     ERROR("/error"),
-    HELP("/help"),;
-
+    HELP("/help");
     private final String commandName;
 }

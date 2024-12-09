@@ -13,6 +13,4 @@ public class CommandDto {
     private Long chatId;
     private String firstName;
     private String text;
-
-
 }
