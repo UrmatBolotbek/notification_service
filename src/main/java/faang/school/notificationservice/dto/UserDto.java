@@ -1,13 +1,10 @@
 package faang.school.notificationservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Locale;
 
 @Data
 @Builder
@@ -22,9 +19,8 @@ public class UserDto {
     private String email;
     private String phone;
     private PreferredContact preference;
-    private Locale locale;
-
+    private String locale;
     public enum PreferredContact {
-        EMAIL, SMS, TELEGRAM
+        EMAIL, SMS, TELEGRAM;
     }
 }
