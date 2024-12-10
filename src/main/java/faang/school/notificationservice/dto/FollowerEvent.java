@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FollowerEvent {
-    String followerId;
-    String followeeId;
+    private long followerId;
+    private long followeeId;
     LocalDateTime receivedAt;
 }
