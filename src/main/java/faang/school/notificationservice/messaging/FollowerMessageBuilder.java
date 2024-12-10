@@ -28,4 +28,9 @@ public class FollowerMessageBuilder implements MessageBuilder<FollowerEvent> {
                 locale
         );
     }
+
+    @Override
+    public Class<?> getInstance() {
+        return FollowerEvent.class;
+    }
 }
