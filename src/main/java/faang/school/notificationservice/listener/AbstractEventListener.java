@@ -27,7 +27,7 @@ public abstract class AbstractEventListener<T> {
     protected void sendNotification(Long id, String message) {
         UserDto user = userServiceClient.getUser(id);
         notificationServices.stream()
-                .filter(notificationService -> notificationService.getPreferredContact().toString().equals(user.getPreference()))
+                .filter(notificationService -> notificationService.getPreferredContact().equals(user.getPreference()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No notification"))
                 .send(user, message);
