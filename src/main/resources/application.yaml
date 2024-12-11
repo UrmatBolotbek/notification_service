@@ -9,6 +9,8 @@ spring:
         comment-channel: comment-topic
         event-start-recommendation-received-channel: recommendation-received-channel
         event-start-achievement-channel: achievement-channel
+        event-start-project-follower-channel: project-follower-channel
+
 
   mail:
     host: smtp.gmail.com
