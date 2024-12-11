@@ -2,7 +2,9 @@ package faang.school.notificationservice.listener.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.notificationservice.client.UserServiceClient;
+import faang.school.notificationservice.dto.UserDto;
 import faang.school.notificationservice.dto.event.EventStartEvent;
+import faang.school.notificationservice.dto.event.EventStartReminderEvent;
 import faang.school.notificationservice.listener.AbstractEventListener;
 import faang.school.notificationservice.messaging.MessageBuilder;
 import faang.school.notificationservice.service.NotificationService;
@@ -16,7 +18,6 @@ import java.util.Locale;
 @Component
 public class EventStartEventListener extends AbstractEventListener<EventStartEvent> implements MessageListener {
 
-
     public EventStartEventListener(List<MessageBuilder<EventStartEvent>> messageBuilders,
                                    ObjectMapper objectMapper,
                                    UserServiceClient userServiceClient,
@@ -26,9 +27,10 @@ public class EventStartEventListener extends AbstractEventListener<EventStartEve
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(message, EventStartEvent.class, event -> {
-            String text = getMessage(event, Locale.ENGLISH);
-            event.getAttendeesIds().forEach(attendee -> sendNotification(attendee, text));
-        });
+        handleEvent(message, EventStartEvent.class, event -> event.getAttendeesIds().forEach(attendee -> {
+            UserDto user = userServiceClient.getUser(attendee);
+            String text = getMessage(event, user);
+            sendNotification(user, text);
+        }));
     }
 }

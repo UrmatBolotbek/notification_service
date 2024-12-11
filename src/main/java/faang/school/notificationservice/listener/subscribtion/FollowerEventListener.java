@@ -12,7 +12,6 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Locale;
 
 @Component
 public class FollowerEventListener extends AbstractEventListener<FollowerEvent> implements MessageListener {
@@ -28,8 +27,8 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEvent> 
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, FollowerEvent.class, event -> {
             UserDto user = userServiceClient.getUser(event.getFolloweeId());
-            String messageText = getMessage(event, Locale.forLanguageTag(user.getLocale()));
-            sendNotification(event.getFolloweeId(),messageText);
+            String messageText = getMessage(event, user);
+            sendNotification(user,messageText);
         });
     }
 }
