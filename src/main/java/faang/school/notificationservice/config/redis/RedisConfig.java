@@ -3,8 +3,8 @@ package faang.school.notificationservice.config.redis;
 import faang.school.notificationservice.listener.post.CommentEventListener;
 import faang.school.notificationservice.listener.event.EventStartEventListener;
 import faang.school.notificationservice.listener.event.EventStartReminderEventListener;
-import faang.school.notificationservice.listener.projectfollower.ProjectFollowerEventListener;
 import faang.school.notificationservice.listener.goal.GoalCompletedEventListener;
+import faang.school.notificationservice.listener.projectfollower.ProjectFollowerEventListener;
 import faang.school.notificationservice.listener.recommendation.RecommendationReceivedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +27,8 @@ public class RedisConfig {
     private final EventStartReminderEventListener eventStartReminderEventListener;
     private final CommentEventListener commentEventListener;
     private final RecommendationReceivedEventListener recommendationReceivedEventListener;
-    private final ProjectFollowerEventListener projectFollowerEventListener;
     private final GoalCompletedEventListener goalCompletedEventListener;
+    private final ProjectFollowerEventListener projectFollowerEventListener;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -43,10 +43,6 @@ public class RedisConfig {
     private String eventStartEventTopic;
     @Value("${spring.data.redis.channels.event-start-reminder-event-channel}")
     private String eventStartReminderEventTopic;
-    @Value("${spring.data.redis.channels.event-start-project-follower-channel}")
-    private String topicProjectFollower;
-
-
     @Value("${spring.data.redis.channels.goal-completed-channel}")
     private String goalCompletedTopic;
 
@@ -74,10 +70,6 @@ public class RedisConfig {
         addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
         addMessageListenerInContainer(commentEventListener, topicComment, container);
         addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
-        addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
-        addMessageListenerInContainer(projectFollowerEventListener, topicProjectFollower, container);
-
-        addMessageListenerInContainer(goalCompletedEventListener, goalCompletedTopic, container);
 
         return container;
     }
