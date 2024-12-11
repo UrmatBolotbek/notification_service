@@ -28,9 +28,8 @@ public class EventStartEventListener extends AbstractEventListener<EventStartEve
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, EventStartEvent.class, event -> event.getAttendeesIds().forEach(attendee -> {
-            UserDto user = userServiceClient.getUser(attendee);
-            String text = getMessage(event, user);
-            sendNotification(user, text);
+            String text = getMessage(attendee, event);
+            sendNotification(attendee, text);
         }));
     }
 }
