@@ -24,6 +24,6 @@ public class GoalCompletedMessageBuilder implements MessageBuilder<GoalCompleted
     @Override
     public String buildMessage(GoalCompletedEvent event, Locale locale) {
         UserDto user = userServiceClient.getUser(event.getUserId());
-        return messageSource.getMessage("goal_completed", new Object[]{user.getUsername()}, locale);
+        return messageSource.getMessage("goal_completed.new", new Object[]{user.getUsername()}, locale);
     }
 }
