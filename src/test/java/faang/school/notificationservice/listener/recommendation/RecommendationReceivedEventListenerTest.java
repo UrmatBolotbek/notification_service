@@ -76,6 +76,7 @@ public class RecommendationReceivedEventListenerTest {
                 .preference(UserDto.PreferredContact.SMS)
                 .username("Roma")
                 .id(5L)
+                .locale("en_US")
                 .build();
     }
 
@@ -83,15 +84,21 @@ public class RecommendationReceivedEventListenerTest {
     void testOnMessageSuccess() throws IOException {
         byte[] pattern = new byte[]{1,2,3,4};
 
-        when(mapper.readValue(message.getBody(), RecommendationReceivedEvent.class)).thenReturn(event);
-        when(userServiceClient.getUser(event.getReceiverId())).thenReturn(user);
-        when(messageBuilder.getInstance()).thenAnswer(invocation -> RecommendationReceivedEvent.class);
-        when(messageBuilder.buildMessage(eq(event), eq(Locale.UK))).thenReturn("You have received a recommendation from a user Roma");
-        when(messageBuilders.stream()).thenReturn(Stream.of(messageBuilder));
-        when(notificationServices.stream()).thenReturn(Stream.of(notificationService));
-        when(notificationService.getPreferredContact()).thenReturn(UserDto.PreferredContact.SMS);
+        when(mapper.readValue(message.getBody(), RecommendationReceivedEvent.class))
+                .thenReturn(event);
+        when(userServiceClient.getUser(event.getReceiverId()))
+                .thenReturn(user);
+        when(messageBuilder.getInstance())
+                .thenAnswer(invocation -> RecommendationReceivedEvent.class);
+        when(messageBuilder.buildMessage(eq(event), eq(Locale.forLanguageTag(user.getLocale()))))
+                .thenReturn("You have received a recommendation from a user Roma");
+        when(messageBuilders.stream())
+                .thenReturn(Stream.of(messageBuilder));
+        when(notificationServices.stream())
+                .thenReturn(Stream.of(notificationService));
+        when(notificationService.getPreferredContact())
+                .thenReturn(UserDto.PreferredContact.SMS);
         assertDoesNotThrow(()-> listener.onMessage(message, pattern));
-
     }
 
 }

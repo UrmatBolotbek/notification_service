@@ -1,6 +1,7 @@
 package faang.school.notificationservice.listener.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.notificationservice.dto.UserDto;
 import faang.school.notificationservice.dto.event.EventStartReminderEvent;
 import faang.school.notificationservice.listener.AbstractEventListener;
 import faang.school.notificationservice.messaging.MessageBuilder;
@@ -26,9 +27,10 @@ public class EventStartReminderEventListener extends AbstractEventListener<Event
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(message, EventStartReminderEvent.class, event -> {
-            String text = getMessage(event, Locale.ENGLISH);
-            event.getAttendeesIds().forEach(attendee -> sendNotification(attendee, text));
-        });
+        handleEvent(message, EventStartReminderEvent.class, event -> event.getAttendeesIds().forEach(attendee -> {
+            UserDto user = userServiceClient.getUser(attendee);
+            String text = getMessage(event, user);
+            sendNotification(user, text);
+        }));
     }
 }
