@@ -26,9 +26,8 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEvent> 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, FollowerEvent.class, event -> {
-            UserDto user = userServiceClient.getUser(event.getFolloweeId());
-            String messageText = getMessage(event, user);
-            sendNotification(user,messageText);
+            String messageText = getMessage(event.getFolloweeId(), event);
+            sendNotification(event.getFolloweeId(), messageText);
         });
     }
 }

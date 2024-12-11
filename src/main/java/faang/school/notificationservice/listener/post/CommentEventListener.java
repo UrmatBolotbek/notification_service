@@ -1,9 +1,10 @@
-package faang.school.notificationservice.listener;
+package faang.school.notificationservice.listener.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.notificationservice.client.UserServiceClient;
 import faang.school.notificationservice.dto.CommentEvent;
 import faang.school.notificationservice.dto.UserDto;
+import faang.school.notificationservice.listener.AbstractEventListener;
 import faang.school.notificationservice.messaging.MessageBuilder;
 import faang.school.notificationservice.service.NotificationService;
 import org.springframework.data.redis.connection.Message;
@@ -26,9 +27,8 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> im
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, CommentEvent.class, event -> {
-            UserDto user = userServiceClient.getUser(event.getPostAuthorId());
-            String messageText = getMessage(event, user);
-            sendNotification(user,messageText);
+            String messageText = getMessage(event.getPostAuthorId(), event);
+            sendNotification(event.getPostAuthorId(), messageText);
         });
     }
 }

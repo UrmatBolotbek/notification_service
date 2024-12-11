@@ -29,9 +29,8 @@ public class RecommendationReceivedEventListener extends AbstractEventListener<R
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, RecommendationReceivedEvent.class, event -> {
-            UserDto user = userServiceClient.getUser(event.getReceiverId());
-            String messageText = getMessage(event, user);
-            sendNotification(user,messageText);
+            String messageText = getMessage(event.getReceiverId(), event);
+            sendNotification(event.getReceiverId(), messageText);
         });
     }
 }

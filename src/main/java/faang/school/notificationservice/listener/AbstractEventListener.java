@@ -33,7 +33,9 @@ public abstract class AbstractEventListener<T> {
         }
     }
 
-    protected String getMessage(T event, UserDto user) {
+    protected String getMessage(Long userId, T event) {
+        UserDto user = userServiceClient.getUser(userId);
+
         log.info("Building message for event of type: {} with locale: {}", event.getClass().getName(), user.getLocale());
         return messageBuilders.stream()
                 .filter(messageBuilder -> messageBuilder.getInstance() == event.getClass())
@@ -46,8 +48,10 @@ public abstract class AbstractEventListener<T> {
                 });
     }
 
-    protected void sendNotification(UserDto user, String message) {
-        log.info("User {} details retrieved", user.getId());
+    protected void sendNotification(long userId, String message) {
+        UserDto user = userServiceClient.getUser(userId);
+
+        log.info("User {} details retrieved", userId);
 
         notificationServices.stream()
                 .filter(notificationService -> notificationService.getPreferredContact().equals(user.getPreference()))
