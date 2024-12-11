@@ -4,6 +4,7 @@ import faang.school.notificationservice.listener.post.CommentEventListener;
 import faang.school.notificationservice.listener.event.EventStartEventListener;
 import faang.school.notificationservice.listener.event.EventStartReminderEventListener;
 import faang.school.notificationservice.listener.projectfollower.ProjectFollowerEventListener;
+import faang.school.notificationservice.listener.goal.GoalCompletedEventListener;
 import faang.school.notificationservice.listener.recommendation.RecommendationReceivedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ public class RedisConfig {
     private final CommentEventListener commentEventListener;
     private final RecommendationReceivedEventListener recommendationReceivedEventListener;
     private final ProjectFollowerEventListener projectFollowerEventListener;
+    private final GoalCompletedEventListener goalCompletedEventListener;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -45,6 +47,8 @@ public class RedisConfig {
     private String topicProjectFollower;
 
 
+    @Value("${spring.data.redis.channels.goal-completed-channel}")
+    private String goalCompletedTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -73,6 +77,7 @@ public class RedisConfig {
         addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
         addMessageListenerInContainer(projectFollowerEventListener, topicProjectFollower, container);
 
+        addMessageListenerInContainer(goalCompletedEventListener, goalCompletedTopic, container);
 
         return container;
     }
