@@ -23,7 +23,7 @@ public class FollowerMessageBuilder implements MessageBuilder<FollowerEvent> {
         UserDto follower = userServiceClient.getUser(event.getFollowerId());
 
         return messageSource.getMessage(
-                "message.newFollower",
+                "follower.new",
                 new Object[]{followee.getUsername(), follower.getUsername()},
                 locale
         );
