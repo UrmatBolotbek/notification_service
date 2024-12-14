@@ -2,6 +2,7 @@ package faang.school.notificationservice.listener.achievement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.notificationservice.client.UserServiceClient;
+import faang.school.notificationservice.dto.UserDto;
 import faang.school.notificationservice.event.AchievementEvent;
 import faang.school.notificationservice.event.RecommendationReceivedEvent;
 import faang.school.notificationservice.listener.AbstractEventListener;
@@ -27,8 +28,8 @@ public class AchievementEventListener extends AbstractEventListener<AchievementE
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, AchievementEvent.class, event -> {
-            String text = getMessage(event, Locale.UK);
-            sendNotification(event.getUserId(), text);
+            String messageText = getMessage(event.getUserId(), event);
+            sendNotification(event.getUserId(), messageText);
         });
     }
 }

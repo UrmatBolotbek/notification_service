@@ -1,6 +1,6 @@
 package faang.school.notificationservice.config.redis;
 
-import faang.school.notificationservice.listener.CommentEventListener;
+import faang.school.notificationservice.listener.post.CommentEventListener;
 import faang.school.notificationservice.listener.event.EventStartEventListener;
 import faang.school.notificationservice.listener.event.EventStartReminderEventListener;
 import faang.school.notificationservice.listener.goal.GoalCompletedEventListener;

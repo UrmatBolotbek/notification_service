@@ -17,11 +17,10 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @Slf4j
 public abstract class AbstractEventListener<T> {
-
-    private final List<MessageBuilder<T>> messageBuilders;
-    private final ObjectMapper objectMapper;
-    private final UserServiceClient userServiceClient;
-    private final List<NotificationService> notificationServices;
+    protected final List<MessageBuilder<T>> messageBuilders;
+    protected final ObjectMapper objectMapper;
+    protected final UserServiceClient userServiceClient;
+    protected final List<NotificationService> notificationServices;
 
     protected void handleEvent(Message message, Class<T> clazz, Consumer<T> consumer) {
         try {
@@ -34,12 +33,14 @@ public abstract class AbstractEventListener<T> {
         }
     }
 
-    protected String getMessage(T event, Locale userLocale) {
-        log.info("Building message for event of type: {} with locale: {}", event.getClass().getName(), userLocale);
+    protected String getMessage(Long userId, T event) {
+        UserDto user = userServiceClient.getUser(userId);
+
+        log.info("Building message for event of type: {} with locale: {}", event.getClass().getName(), user.getLocale());
         return messageBuilders.stream()
                 .filter(messageBuilder -> messageBuilder.getInstance() == event.getClass())
                 .findFirst()
-                .map(messageBuilder -> messageBuilder.buildMessage(event, userLocale))
+                .map(messageBuilder -> messageBuilder.buildMessage(event, Locale.forLanguageTag(user.getLocale())))
                 .orElseThrow(() -> {
                     log.error("No message builder found for the given event type: {}", event.getClass().getName());
                     return new IllegalArgumentException("No message builder found for the given event type: "
@@ -47,11 +48,10 @@ public abstract class AbstractEventListener<T> {
                 });
     }
 
-    protected void sendNotification(Long id, String message) {
-        log.info("Fetching user details for user ID: {}", id);
+    protected void sendNotification(long userId, String message) {
+        UserDto user = userServiceClient.getUser(userId);
 
-        UserDto user = userServiceClient.getUser(id);
-        log.info("User details retrieved: {}", user);
+        log.info("User {} details retrieved", userId);
 
         notificationServices.stream()
                 .filter(notificationService -> notificationService.getPreferredContact().equals(user.getPreference()))
@@ -62,6 +62,6 @@ public abstract class AbstractEventListener<T> {
                             + user.getPreference());
                 })
                 .send(user, message);
-        log.info("Notification successfully sent to user ID: {}", id);
+        log.info("Notification successfully sent to user ID: {}", user.getId());
     }
 }

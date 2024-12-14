@@ -2,6 +2,7 @@ package faang.school.notificationservice.listener.recommendation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.notificationservice.client.UserServiceClient;
+import faang.school.notificationservice.dto.UserDto;
 import faang.school.notificationservice.event.RecommendationReceivedEvent;
 import faang.school.notificationservice.listener.AbstractEventListener;
 import faang.school.notificationservice.messaging.MessageBuilder;
@@ -28,8 +29,8 @@ public class RecommendationReceivedEventListener extends AbstractEventListener<R
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, RecommendationReceivedEvent.class, event -> {
-            String text = getMessage(event, Locale.UK);
-            sendNotification(event.getReceiverId(), text);
+            String messageText = getMessage(event.getReceiverId(), event);
+            sendNotification(event.getReceiverId(), messageText);
         });
     }
 }

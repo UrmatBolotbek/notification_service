@@ -80,6 +80,7 @@ class GoalCompletedEventListenerTest {
                 .preference(UserDto.PreferredContact.SMS)
                 .username("Robert")
                 .id(21L)
+                .locale("en_US")
                 .build();
     }
 
@@ -87,13 +88,20 @@ class GoalCompletedEventListenerTest {
     void testOnMessageSuccess() throws IOException {
         byte[] pattern = new byte[]{1, 2, 3, 4};
 
-        when(mapper.readValue(message.getBody(), GoalCompletedEvent.class)).thenReturn(event);
-        when(userServiceClient.getUser(event.getUserId())).thenReturn(user);
-        when(messageBuilder.getInstance()).thenAnswer(invocation -> GoalCompletedEvent.class);
-        when(messageBuilder.buildMessage(eq(event), eq(Locale.UK))).thenReturn("Congrats, Robert! You completed a goal!");
-        when(messageBuilders.stream()).thenReturn(Stream.of(messageBuilder));
-        when(notificationServices.stream()).thenReturn(Stream.of(notificationService));
-        when(notificationService.getPreferredContact()).thenReturn(UserDto.PreferredContact.SMS);
+        when(mapper.readValue(message.getBody(), GoalCompletedEvent.class))
+                .thenReturn(event);
+        when(userServiceClient.getUser(event.getUserId()))
+                .thenReturn(user);
+        when(messageBuilder.getInstance())
+                .thenAnswer(invocation -> GoalCompletedEvent.class);
+        when(messageBuilder.buildMessage(eq(event), eq(Locale.forLanguageTag(user.getLocale()))))
+                .thenReturn("Congrats, Robert! You completed a goal!");
+        when(messageBuilders.stream())
+                .thenReturn(Stream.of(messageBuilder));
+        when(notificationServices.stream())
+                .thenReturn(Stream.of(notificationService));
+        when(notificationService.getPreferredContact())
+                .thenReturn(UserDto.PreferredContact.SMS);
         assertDoesNotThrow(() -> listener.onMessage(message, pattern));
     }
 }
