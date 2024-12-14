@@ -26,8 +26,8 @@ public class GoalCompletedEventListener extends AbstractEventListener<GoalComple
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, GoalCompletedEvent.class, event -> {
-            String text = getMessage(event, Locale.UK);
-            sendNotification(event.getUserId(), text);
+            String messageText = getMessage(event.getUserId(), event);
+            sendNotification(event.getUserId(), messageText);
         });
     }
 }
