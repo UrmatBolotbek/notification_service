@@ -11,10 +11,8 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Locale;
 
 @Component
-
 public class ProjectFollowerEventListener extends AbstractEventListener<ProjectFollowerEvent> implements MessageListener {
     public ProjectFollowerEventListener(List<MessageBuilder<ProjectFollowerEvent>> messageBuilders,
                                         ObjectMapper objectMapper, UserServiceClient userServiceClient,
@@ -24,10 +22,10 @@ public class ProjectFollowerEventListener extends AbstractEventListener<ProjectF
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(message, ProjectFollowerEvent.class, event->{
-            String text = getMessage(event, Locale.ENGLISH);
+        handleEvent(message, ProjectFollowerEvent.class, event -> {
+            Long userId = event.getCreatorId();
+            String text = getMessage(userId, event);
             sendNotification(event.getCreatorId(), text);
         });
-
     }
 }
