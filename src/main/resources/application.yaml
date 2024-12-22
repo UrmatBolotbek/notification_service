@@ -10,6 +10,8 @@ spring:
         event-start-recommendation-received-channel: recommendation-received-channel
         goal-completed-channel: goal-completed
         event-start-achievement-channel: achievement-channel
+        event-start-project-follower-channel: project-follower-channel
+
 
   mail:
     host: smtp.mail.ru
