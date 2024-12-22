@@ -1,5 +1,6 @@
 package faang.school.notificationservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,8 @@ public class UserDto {
     private String phone;
     private PreferredContact preference;
     private String locale;
+
     public enum PreferredContact {
-        EMAIL, SMS, TELEGRAM;
+        EMAIL, SMS, TELEGRAM
     }
 }

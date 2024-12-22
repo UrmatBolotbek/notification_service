@@ -70,6 +70,7 @@ public class RedisConfig {
         addMessageListenerInContainer(eventStartReminderEventListener, eventStartReminderEventTopic, container);
         addMessageListenerInContainer(commentEventListener, topicComment, container);
         addMessageListenerInContainer(recommendationReceivedEventListener, topicRecommendationReceived, container);
+        addMessageListenerInContainer(goalCompletedEventListener, goalCompletedTopic, container);
 
         return container;
     }
